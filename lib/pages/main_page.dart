@@ -1,7 +1,6 @@
 import 'package:diary_app/pages/home_page.dart';
 import 'package:diary_app/pages/note_page.dart';
 import 'package:flutter/material.dart';
-import 'package:calendar_appbar/calendar_appbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MainPage extends StatefulWidget {
@@ -10,8 +9,8 @@ class MainPage extends StatefulWidget {
   @override
   State<MainPage> createState() => _MainPageState();
 }
-
 class _MainPageState extends State<MainPage> {
+  DateTime? selectedDate;
   final List<Widget> _children = [HomePage(), NotePage()];
   int currentIndex = 0;
 
@@ -20,40 +19,35 @@ class _MainPageState extends State<MainPage> {
       currentIndex = index;
     });
   }
+    @override
+  void initState() {
+    setState(() {
+      selectedDate = DateTime.now();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (currentIndex == 0)
-          ? CalendarAppBar(
-              onDateChanged: (value) => print(value),
-              firstDate: DateTime.now().subtract(Duration(days: 365)),
-              lastDate: DateTime.now(),
-              backButton: false,
-              locale: 'id',
-              accent: Colors.pinkAccent,
-            )
-          : PreferredSize(
+          ? AppBar(
+            title: Center(child: Text('MyDiary', style: GoogleFonts.whisper(fontSize: 30),)),
+            backgroundColor: Colors.pinkAccent,
+            elevation: 0,
+            ): PreferredSize(
               child: Container(
                   child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 36, horizontal: 16),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 child: Center(
                   child: Text(
                     'Catatan',
-                    style: GoogleFonts.bayon(fontSize: 20),
+                    style: GoogleFonts.anton(fontSize: 30),
                   ),
                 ),
               )),
               preferredSize: Size.fromHeight(100)),
-      floatingActionButton: Visibility(
-        visible: (currentIndex == 0) ? true : false,
-        child: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: Colors.pinkAccent,
-          child: Icon(Icons.add),
-        ),
-      ),
       body: _children[currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
